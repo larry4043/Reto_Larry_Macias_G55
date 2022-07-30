@@ -15,6 +15,7 @@ import Controlador.EnumZona;
 
 
 
+
 public class UserMenu extends javax.swing.JFrame {
     Conexion conexion = new Conexion();
     Connection connection;
@@ -583,7 +584,7 @@ public class UserMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAdduserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdduserActionPerformed
-        AddUserForm adduserform = new AddUserForm(this, true);
+        AddUserForm adduserform = new AddUserForm(this,true);
         adduserform.setVisible(true);
         borrarRegistrosTabla();
         listarEmpleados();
@@ -656,23 +657,33 @@ public class UserMenu extends javax.swing.JFrame {
 
     private void tblDepartamentosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDepartamentosMouseClicked
         int row = tblDepartamentos.getSelectedRow();
-        String sucursal = (String) tblDepartamentos.getValueAt(row, 0);
-        System.out.println(sucursal);
-        String departamento = (String) tblDepartamentos.getValueAt(row, 1);
-        String queryidSucursal = "SELECT idSucursal FROM sucursal INNER JOIN direccion "
-                + "WHERE FK_idDireccion = idDireccion AND nombreSucursal = '"+sucursal+"'";
+        
+        if(row > -1){
+        String sucursal = tblDepartamentos.getValueAt(row, 0).toString();
+        String departamento = tblDepartamentos.getValueAt(row, 1).toString();
+        String queryDireccion = "SELECT idDireccion, idSucursal, zona, tipoCalle, numero1, numero2, numero3 FROM direccion INNER JOIN sucursal WHERE direccion.idDireccion = sucursal.FK_idDireccion AND nombreSucursal = '"+sucursal+"'";
         try {
             connection = conexion.getConnection();
             st = connection.createStatement();
-            rs = st.executeQuery(queryidSucursal);
+            rs = st.executeQuery(queryDireccion);
             while (rs.next()) {
-                int idSucursal = rs.getInt("idSucursal");
+                int idDireccion = rs.getInt("idDireccion");
+                
+                String zona = rs.getString("zona");
+                String tipoCalle = rs.getString("tipoCalle");
+                String numero1 = rs.getString("numero1");
+                String numero2 = rs.getString("numero2");
+                String numero3 = rs.getString("numero3");
                 GestionarSucursalesForm gestionarSucursal = new GestionarSucursalesForm(this, true);
-                gestionarSucursal.recibirDatosSucursal(idSucursal);
+                gestionarSucursal.recibirDatosSucursal(idDireccion, departamento, sucursal, zona, tipoCalle, numero1, numero2, numero3);
                 gestionarSucursal.setVisible(true);
+                
             }
+                borrarDatosTablaDepartamentos();
+                listarDepartamentos();
         } catch (SQLException e) {
             System.out.println(e);
+            }
         }
     }//GEN-LAST:event_tblDepartamentosMouseClicked
     

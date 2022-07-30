@@ -12,7 +12,7 @@ public class Main {
         
         Login iniciosesion = new Login();
         iniciosesion.setVisible(true);
-        System.out.println("hola mundo");
+        
  
     }
     

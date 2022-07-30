@@ -45,7 +45,7 @@ public class AddUserForm extends javax.swing.JDialog {
             cbSucursal.addItem(sucursal);
         }
         String nombreSucursal = cbSucursal.getSelectedItem().toString();
-        String query = "SELECT `idSucursal` FROM `sucursal` WHERE `nombreSucursal`= '" + nombreSucursal + "';";
+        String query = "SELECT idSucursal FROM `sucursal` WHERE nombreSucursal= '"+nombreSucursal+"';";
         return query;
     }
 
@@ -233,15 +233,18 @@ public class AddUserForm extends javax.swing.JDialog {
         String document = txtDocument.getText();
         String email = txtEmail.getText();
         String queryNombreSucursal = llenarComboboxSucursales();
+        
         System.out.println(queryNombreSucursal);
 
         if (name.isEmpty() || lastname.isEmpty() || document.isEmpty() || email.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Faltan campos por diligenciar", "Registro de usuario", JOptionPane.WARNING_MESSAGE);
         } else {
+            
             try {
                 connection = conexion.getConnection();
                 st = connection.createStatement();
                 rs = st.executeQuery(queryNombreSucursal);
+                System.out.println(queryNombreSucursal);
                 while (rs.next()) {
                     int idSucursal = rs.getInt("idSucursal");
                     String queryCrearEmpleado = "INSERT INTO `empleado`(`nombreEmp`, `apellidos`, `tipoDocumento`, "

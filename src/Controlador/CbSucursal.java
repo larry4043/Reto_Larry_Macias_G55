@@ -20,7 +20,7 @@ public class CbSucursal {
     }
 
     public ArrayList getListaSucursales() {
-        System.out.println("función getListaSucursales");
+        //System.out.println("función getListaSucursales");
         ArrayList mListaSucursales = new ArrayList();
         Sucursal sucursal = null;
         try {

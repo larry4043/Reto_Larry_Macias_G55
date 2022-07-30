@@ -5,7 +5,7 @@ package Controlador;
 public enum EnumTipoDocumento {
     
     CedulaCiudadania,
-    CedulaExtranjeria,
+    CedulaExtranjera,
     LibretaMilitar,
     Pasaporte,
     Otro
