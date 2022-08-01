@@ -130,14 +130,15 @@ public class UserMenu extends javax.swing.JFrame {
         String filtroBusqueda = txtSearch.getText();
         if (filtroBusqueda.isEmpty()) {
 
-            String queryConsulta = "SELECT `nombreEmp`, `apellidos`, `tipoDocumento`, `documento`, "
-                    + "`correo`, `nombreSucursal` FROM `empleado` INNER JOIN sucursal "
-                    + "ON empleado.FK_idSucursal = sucursal.idSucursal";
+            String queryConsulta = "SELECT nombreEmp, apellidos, tipoDocumento, documento, correo, "
+                    + "nombreSucursal, nombrePuestoTrabajo FROM empleado INNER JOIN sucursal "
+                    + "ON idSucursal = FK_idSucursal INNER JOIN puestoTrabajo "
+                    + "ON(FK_idPuestoTrabajo= idPuestoTrabajo);";
             try {
                 connection = conexion.getConnection();
                 st = connection.createStatement();
                 rs = st.executeQuery(queryConsulta);
-                Object[] empleado = new Object[6];
+                Object[] empleado = new Object[7];
                 contenidoTablaEmpleados = (DefaultTableModel) tblEmployee.getModel();
                 while (rs.next()) {
                     
@@ -147,6 +148,7 @@ public class UserMenu extends javax.swing.JFrame {
                     empleado[3] = rs.getString("documento");
                     empleado[4] = rs.getString("correo");
                     empleado[5] = rs.getString("nombreSucursal");
+                    empleado[6] = rs.getString("nombrePuestoTrabajo");
                     contenidoTablaEmpleados.addRow(empleado);
                     tblEmployee.setModel(contenidoTablaEmpleados);                    
                 }
@@ -155,17 +157,17 @@ public class UserMenu extends javax.swing.JFrame {
             }
         } else {
             String queryConsulta = "SELECT nombreEmp, apellidos, tipoDocumento, documento, correo,"
-                    + " FK_idSucursal, idSucursal, nombreSucursal FROM sucursal INNER JOIN empleado "
-                    + "ON empleado.FK_idSucursal = sucursal.idSucursal WHERE nombreEmp LIKE '%"+filtroBusqueda+"%' "
-                    + "OR apellidos LIKE '%"+filtroBusqueda+"%' OR tipoDocumento LIKE '%"+filtroBusqueda+"%' "
-                    + "OR documento LIKE '%"+filtroBusqueda+"%' OR correo LIKE '%"+filtroBusqueda+"%' "
-                    + "OR nombreSucursal LIKE '%"+filtroBusqueda+"%'";
+                    + " nombreSucursal, nombrePuestoTrabajo FROM empleado INNER JOIN sucursal "
+                    + "ON (idSucursal = FK_idSucursal) INNER JOIN puestoTrabajo "
+                    + "ON(FK_idPuestoTrabajo = idPuestoTrabajo)"
+                    + "WHERE nombreEmp LIKE '%" + filtroBusqueda + "%' "
+                    + "OR apellidos LIKE '%" + filtroBusqueda + "%';";
             System.out.println(queryConsulta);
             try {
                 connection = conexion.getConnection();
                 st = connection.createStatement();
                 rs = st.executeQuery(queryConsulta);
-                Object[] empleado = new Object[6];
+                Object[] empleado = new Object[7];
                 contenidoTablaEmpleados = (DefaultTableModel) tblEmployee.getModel();
                 while (rs.next()) {
                     
@@ -175,6 +177,7 @@ public class UserMenu extends javax.swing.JFrame {
                     empleado[3] = rs.getString("documento");
                     empleado[4] = rs.getString("correo");
                     empleado[5] = rs.getString("nombreSucursal");
+                    empleado[6] = rs.getString("nombrePuestoTrabajo");
                     contenidoTablaEmpleados.addRow(empleado);
                     tblEmployee.setModel(contenidoTablaEmpleados);
                 }
@@ -201,7 +204,7 @@ public class UserMenu extends javax.swing.JFrame {
         tblDepartamentos = new javax.swing.JTable();
         txtSearchSucursal = new javax.swing.JTextField();
         btnConsultaSucursal = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnAddEmpleado = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         cbDepartamento = new javax.swing.JComboBox<>();
@@ -270,8 +273,13 @@ public class UserMenu extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(255, 255, 255));
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/empleado.png"))); // NOI18N
+        btnAddEmpleado.setBackground(new java.awt.Color(255, 255, 255));
+        btnAddEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/empleado.png"))); // NOI18N
+        btnAddEmpleado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddEmpleadoActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Departamento");
 
@@ -385,7 +393,7 @@ public class UserMenu extends javax.swing.JFrame {
                         .addComponent(btnConsultaSucursal))
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAddEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33))
         );
         jPanel3Layout.setVerticalGroup(
@@ -406,7 +414,7 @@ public class UserMenu extends javax.swing.JFrame {
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnAddEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(143, 143, 143))))
         );
 
@@ -438,11 +446,11 @@ public class UserMenu extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nombres", "Apellidos", "Tipo documento", "Documento", "Correo", "Sucursal"
+                "Nombres", "Apellidos", "Tipo documento", "Documento", "Correo", "Sucursal", "Ocupación"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -604,9 +612,10 @@ public class UserMenu extends javax.swing.JFrame {
             String documento = tblEmployee.getValueAt(row, 3).toString();
             String correo = tblEmployee.getValueAt(row, 4).toString();
             String sucursal = tblEmployee.getValueAt(row, 5).toString();
+            String ocupacion = tblEmployee.getValueAt(row, 6).toString();
             
             ShowUserForm showUserForm = new ShowUserForm(this, true);
-            showUserForm.recibirDatos(nombres, apellidos, tipoDocumento, documento, correo, sucursal);
+            showUserForm.recibirDatos(nombres, apellidos, tipoDocumento, documento, correo, sucursal, ocupacion);
             showUserForm.setVisible(true);
             borrarRegistrosTabla();
             listarEmpleados();
@@ -686,11 +695,17 @@ public class UserMenu extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_tblDepartamentosMouseClicked
+
+    private void btnAddEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddEmpleadoActionPerformed
+        PuestosTrabajo puestosTrabajo = new PuestosTrabajo(this, true);
+        puestosTrabajo.setVisible(true);
+    }//GEN-LAST:event_btnAddEmpleadoActionPerformed
     
 
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddEmpleado;
     private javax.swing.JButton btnAdduser;
     private javax.swing.JButton btnConsultaSucursal;
     private javax.swing.JButton btnGuardar;
@@ -698,7 +713,6 @@ public class UserMenu extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbDepartamento;
     private javax.swing.JComboBox<String> cbTipoCalle;
     private javax.swing.JComboBox<String> cbZona;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

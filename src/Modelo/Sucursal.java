@@ -7,10 +7,18 @@ public class Sucursal {
     private String nombreSucursal;
 
     public Sucursal() {
-        idSucursal = 0;
-        nombreSucursal = "";
+        this.idSucursal = 0;
+        this.nombreSucursal = "";
     }
 
+    public Sucursal(int idSucursal, String nombreSucursal) {
+        this.idSucursal = idSucursal;
+        this.nombreSucursal = nombreSucursal;
+    }
+
+    
+    
+    
     public int getIdSucursal() {
         return idSucursal;
     }

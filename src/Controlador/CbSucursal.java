@@ -20,7 +20,7 @@ public class CbSucursal {
     }
 
     public ArrayList getListaSucursales() {
-        //System.out.println("función getListaSucursales");
+        
         ArrayList mListaSucursales = new ArrayList();
         Sucursal sucursal = null;
         try {
@@ -29,6 +29,7 @@ public class CbSucursal {
             rs = st.executeQuery("SELECT idSucursal,nombreSucursal FROM `sucursal`;");
             while (rs.next()) {
                 sucursal = new Sucursal();
+                
                 sucursal.setIdSucursal(rs.getInt("idSucursal"));
                 sucursal.setNombreSucursal(rs.getString("nombreSucursal"));
                 mListaSucursales.add(sucursal);

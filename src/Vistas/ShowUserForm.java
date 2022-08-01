@@ -19,7 +19,7 @@ public class ShowUserForm extends javax.swing.JDialog {
         initComponents();
     }
 
-    public void recibirDatos( String nombres, String apellidos, String tipoDocumento, String documento, String correo,String sucursal ) {
+    public void recibirDatos( String nombres, String apellidos, String tipoDocumento, String documento, String correo,String sucursal, String ocupacion ) {
         
         txtnombres.setText(nombres);
         txtapellidos.setText(apellidos);
@@ -27,12 +27,13 @@ public class ShowUserForm extends javax.swing.JDialog {
         txtdocumento.setText(documento);
         txtcorreo.setText(correo);
         txtsucursal.setText(sucursal);
+        txtocupacion.setText(ocupacion);
     }
 
     public void actualizarEmpleado() {
 
         String documento = txtdocumento.getText();
-        String queryIdEmpleado = "SELECT idEmp FROM empleado WHERE documento = '" + documento + "';";
+        String queryIdEmpleado = "SELECT idEmp, FK_idPuestoTrabajo from empleado inner join puestoTrabajo ON(puestoTrabajo.idPuestoTrabajo = empleado.FK_idPuestoTrabajo) where documento = '" + documento + "';";
         try {
             connection = conexion.getConnection();
             st = connection.createStatement();
@@ -107,6 +108,8 @@ public class ShowUserForm extends javax.swing.JDialog {
         btnRegresar = new javax.swing.JButton();
         txtsucursal = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtocupacion = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Información de empleado");
@@ -162,6 +165,10 @@ public class ShowUserForm extends javax.swing.JDialog {
 
         jLabel10.setText("Sucursal");
 
+        jLabel4.setText("Ocupacion");
+
+        txtocupacion.setEditable(false);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -188,7 +195,8 @@ public class ShowUserForm extends javax.swing.JDialog {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel7)
                                     .addComponent(jLabel6)
-                                    .addComponent(jLabel8))
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel4))
                                 .addGap(23, 23, 23)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtdocumento)
@@ -196,7 +204,8 @@ public class ShowUserForm extends javax.swing.JDialog {
                             .addComponent(txtapellidos)
                             .addComponent(txtnombres)
                             .addComponent(txttipoDocumento, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtsucursal)))
+                            .addComponent(txtsucursal)
+                            .addComponent(txtocupacion)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(176, 176, 176)
                         .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -245,12 +254,16 @@ public class ShowUserForm extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtcorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
-                .addGap(53, 53, 53)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtocupacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEditar)
                     .addComponent(btnEliminar)
                     .addComponent(btnRegresar))
-                .addContainerGap(103, Short.MAX_VALUE))
+                .addContainerGap(100, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -296,6 +309,7 @@ public class ShowUserForm extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -306,6 +320,7 @@ public class ShowUserForm extends javax.swing.JDialog {
     private javax.swing.JTextField txtcorreo;
     private javax.swing.JTextField txtdocumento;
     private javax.swing.JTextField txtnombres;
+    private javax.swing.JTextField txtocupacion;
     private javax.swing.JTextField txtsucursal;
     private javax.swing.JTextField txttipoDocumento;
     // End of variables declaration//GEN-END:variables
